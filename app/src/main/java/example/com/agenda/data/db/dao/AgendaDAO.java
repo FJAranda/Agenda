@@ -23,7 +23,7 @@ public class AgendaDAO {
         if (cursor.moveToFirst()){
             do {
                 try {
-                    aux.add(new Contacto(cursor.getInt(0), cursor.getString(1), sdf.parse(cursor.getString(2)), cursor.getString(3)));
+                    aux.add(new Contacto(cursor.getInt(0), cursor.getString(1), sdf.parse(cursor.getString(3)), cursor.getString(2)));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
