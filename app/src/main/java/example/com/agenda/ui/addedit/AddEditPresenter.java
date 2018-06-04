@@ -1,5 +1,7 @@
 package example.com.agenda.ui.addedit;
 
+import android.widget.Toast;
+
 import java.util.Date;
 
 import example.com.agenda.data.db.pojo.Contacto;
@@ -15,7 +17,7 @@ public class AddEditPresenter implements AddEditContract.Presenter, AddEditInter
 
     @Override
     public void addContacto(String nombre, String telefono, Date fecha) {
-        interactor.addContacto(nombre, telefono, fecha);
+        interactor.validateContacto(nombre, telefono, fecha, this);
     }
 
     @Override

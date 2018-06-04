@@ -38,6 +38,7 @@ public class AddEditInteractorImpl implements AddEditInteractor{
         }else {
             Contacto contacto = new Contacto(nombre,fechaNac,telefono);
             ContactosRepository.getInstance().addContacto(contacto, this);
+            listener.onSuccess();
         }
 
     }
