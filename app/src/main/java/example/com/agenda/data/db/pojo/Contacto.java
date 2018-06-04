@@ -47,4 +47,10 @@ public class Contacto {
         this.fecha = fecha;
         this.telefono = telefono;
     }
+
+    public Contacto(String nombre, Date fecha, String telefono) {
+        this.nombre = nombre;
+        this.fecha = fecha;
+        this.telefono = telefono;
+    }
 }

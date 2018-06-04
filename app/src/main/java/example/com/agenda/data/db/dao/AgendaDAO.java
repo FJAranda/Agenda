@@ -1,5 +1,6 @@
 package example.com.agenda.data.db.dao;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -33,5 +34,21 @@ public class AgendaDAO {
         AgendaOpenHelper.getInstance().closeDatabase();
 
         return aux;
+    }
+
+    public long add(Contacto contacto) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SQLiteDatabase sqLiteDatabase = AgendaOpenHelper.getInstance().openDatabase();
+        ContentValues contentValues = new ContentValues();
+        long id;
+
+        contentValues.put(DBAgendaContract.ContactoEntry.COLUMN_NOMBRE, contacto.getNombre());
+        contentValues.put(DBAgendaContract.ContactoEntry.COLUMN_NUMERO, contacto.getTelefono());
+        contentValues.put(DBAgendaContract.ContactoEntry.COLUMN_FECHA, sdf.format(contacto.getFecha()));
+
+        id = sqLiteDatabase.insert(DBAgendaContract.ContactoEntry.TABLE_NAME, null, contentValues);
+
+        AgendaOpenHelper.getInstance().closeDatabase();
+        return id;
     }
 }
