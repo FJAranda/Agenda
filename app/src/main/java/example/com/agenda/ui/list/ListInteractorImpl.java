@@ -17,4 +17,10 @@ public class ListInteractorImpl implements ListInteractor{
         ArrayList<Contacto> agenda = ContactosRepository.getInstance().getContactos();
         listener.onSuccess(agenda);
     }
+
+    @Override
+    public void deleteContacto(Contacto contacto) {
+        ContactosRepository.getInstance().deleteContacto(contacto);
+        listener.onSuccess();
+    }
 }

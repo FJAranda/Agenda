@@ -1,5 +1,7 @@
 package example.com.agenda.ui.list;
 
+import android.widget.Toast;
+
 import java.util.ArrayList;
 
 import example.com.agenda.data.db.pojo.Contacto;
@@ -19,6 +21,11 @@ public class ListPresenter implements ListContract.Presenter, ListInteractor.onL
     }
 
     @Override
+    public void deleteContacto(Contacto contacto) {
+        interactor.deleteContacto(contacto);
+    }
+
+    @Override
     public void onDatabaseError() {
 
     }
@@ -26,5 +33,11 @@ public class ListPresenter implements ListContract.Presenter, ListInteractor.onL
     @Override
     public void onSuccess(ArrayList<Contacto> agenda) {
         view.showAgenda(agenda);
+    }
+
+    @Override
+    public void onSuccess() {
+        loadAgenda();
+        view.showDeleteMessage();
     }
 }

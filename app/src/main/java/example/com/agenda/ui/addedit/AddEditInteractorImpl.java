@@ -24,7 +24,8 @@ public class AddEditInteractorImpl implements AddEditInteractor{
 
     @Override
     public void editContacto(Contacto contacto, onAddEditFinishedListener listener) {
-
+        ContactosRepository.getInstance().updateContacto(contacto);
+        listener.onSuccess();
     }
 
     @Override

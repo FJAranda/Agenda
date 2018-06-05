@@ -2,7 +2,11 @@ package example.com.agenda.adapter;
 
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -14,15 +18,18 @@ import example.com.agenda.MainActivity;
 import example.com.agenda.R;
 import example.com.agenda.data.db.pojo.Contacto;
 import example.com.agenda.ui.AgendaApplication;
+import example.com.agenda.ui.addedit.AddEditContract;
 import example.com.agenda.ui.addedit.AddEditFragment;
 
 public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.ViewHolder>{
     private AgendaAdapter.OnItemClickListener listener;
+    private AgendaAdapter.OnItemLongClickListener longClickListener;
     private ArrayList<Contacto> contactos;
 
-    public AgendaAdapter(ArrayList<Contacto> agenda, OnItemClickListener listener){
+    public AgendaAdapter(ArrayList<Contacto> agenda, OnItemClickListener listener, OnItemLongClickListener longClickListener){
         this.contactos = agenda;
         this.listener = listener;
+        this.longClickListener = longClickListener;
     }
 
     @Override
@@ -37,7 +44,7 @@ public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.ViewHolder
     @Override
     public void onBindViewHolder(AgendaAdapter.ViewHolder holder, int position) {
         Contacto contacto = contactos.get(position);
-        holder.bind(contacto, listener);
+        holder.bind(contacto, listener, longClickListener);
     }
 
     @Override
@@ -49,7 +56,11 @@ public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.ViewHolder
         void onItemClick(Contacto contacto);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public interface OnItemLongClickListener {
+        void onItemLongClick(Contacto contacto);
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder{
         private TextView tvNombre;
         private TextView tvNumero;
         private TextView tvFecha;
@@ -61,7 +72,7 @@ public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.ViewHolder
             tvFecha = itemView.findViewById(R.id.tvFecha);
         }
 
-        public void bind(final Contacto contacto, final OnItemClickListener listener){
+        public void bind(final Contacto contacto, final OnItemClickListener listener, final OnItemLongClickListener longClickListener){
             tvNombre.setText(contacto.getNombre());
             tvNumero.setText(contacto.getTelefono());
             tvFecha.setText(contacto.getFecha().toString());
@@ -71,6 +82,15 @@ public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.ViewHolder
                     if (listener != null){
                         listener.onItemClick(contacto);
                     }
+                }
+            });
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    if (longClickListener != null){
+                        longClickListener.onItemLongClick(contacto);
+                    }
+                    return true;
                 }
             });
 

@@ -36,4 +36,12 @@ public class ContactosRepository {
         }
     }
 
+    public void updateContacto(Contacto contacto){
+        dao.updateContacto(contacto);
+    }
+
+    public void deleteContacto(Contacto contacto) {
+        dao.deleteContacto(contacto);
+
+    }
 }

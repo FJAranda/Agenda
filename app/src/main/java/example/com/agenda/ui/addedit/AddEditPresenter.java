@@ -22,7 +22,7 @@ public class AddEditPresenter implements AddEditContract.Presenter, AddEditInter
 
     @Override
     public void editContacto(Contacto contacto) {
-
+        interactor.editContacto(contacto, this);
     }
 
     @Override

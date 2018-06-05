@@ -51,4 +51,39 @@ public class AgendaDAO {
         AgendaOpenHelper.getInstance().closeDatabase();
         return id;
     }
+
+    public int updateContacto(Contacto contacto){
+        SQLiteDatabase sqLiteDatabase = AgendaOpenHelper.getInstance().openDatabase();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String clause = DBAgendaContract.ContactoEntry._ID + "=?";
+        String[] whereargs = new String[]{String.valueOf(contacto.get_ID())};
+        int rows;
+
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(DBAgendaContract.ContactoEntry.COLUMN_NOMBRE, contacto.getNombre());
+        contentValues.put(DBAgendaContract.ContactoEntry.COLUMN_NUMERO, contacto.getTelefono());
+        contentValues.put(DBAgendaContract.ContactoEntry.COLUMN_FECHA, sdf.format(contacto.getFecha()));
+
+        rows = sqLiteDatabase.update(DBAgendaContract.ContactoEntry.TABLE_NAME, contentValues, clause, whereargs);
+
+        AgendaOpenHelper.getInstance().closeDatabase();
+
+        return rows;
+    }
+
+    public int deleteContacto(Contacto contacto) {
+        SQLiteDatabase sqLiteDatabase = AgendaOpenHelper.getInstance().openDatabase();
+
+        String clause = DBAgendaContract.ContactoEntry._ID + "=?";
+        String[] whereargs = new String[]{String.valueOf(contacto.get_ID())};
+        int rows;
+
+        rows = sqLiteDatabase.delete(DBAgendaContract.ContactoEntry.TABLE_NAME, clause, whereargs);
+
+        AgendaOpenHelper.getInstance().closeDatabase();
+
+        return rows;
+    }
 }
