@@ -1,5 +1,6 @@
 package example.com.agenda.adapter;
 
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,16 +10,19 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import example.com.agenda.MainActivity;
 import example.com.agenda.R;
 import example.com.agenda.data.db.pojo.Contacto;
 import example.com.agenda.ui.AgendaApplication;
+import example.com.agenda.ui.addedit.AddEditFragment;
 
 public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.ViewHolder>{
     private AgendaAdapter.OnItemClickListener listener;
     private ArrayList<Contacto> contactos;
 
-    public AgendaAdapter(ArrayList<Contacto> agenda){
+    public AgendaAdapter(ArrayList<Contacto> agenda, OnItemClickListener listener){
         this.contactos = agenda;
+        this.listener = listener;
     }
 
     @Override
@@ -64,7 +68,9 @@ public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.ViewHolder
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(AgendaApplication.getContext(), contacto.toString(), Toast.LENGTH_LONG).show();
+                    if (listener != null){
+                        listener.onItemClick(contacto);
+                    }
                 }
             });
 

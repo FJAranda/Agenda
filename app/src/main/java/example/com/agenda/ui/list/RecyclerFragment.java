@@ -22,7 +22,7 @@ import example.com.agenda.data.db.pojo.Contacto;
 import example.com.agenda.ui.AgendaApplication;
 import example.com.agenda.ui.addedit.AddEditFragment;
 
-public class RecyclerFragment extends Fragment implements ListContract.View {
+public class RecyclerFragment extends Fragment implements ListContract.View, AgendaAdapter.OnItemClickListener{
     public static final String TAG = "listagenda";
 
     private ListContract.Presenter presenter;
@@ -72,7 +72,7 @@ public class RecyclerFragment extends Fragment implements ListContract.View {
         fabRecyclerActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.addNewContacto();
+                mListener.addNewContacto(null);
             }
         });
         return root;
@@ -93,11 +93,22 @@ public class RecyclerFragment extends Fragment implements ListContract.View {
 
     @Override
     public void showAgenda(ArrayList<Contacto> agenda) {
-        adapter = new AgendaAdapter(agenda);
+        adapter = new AgendaAdapter(agenda, this);
         rvAgenda.setAdapter(adapter);
     }
 
+    @Override
+    public void onItemClick(Contacto contacto) {
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(AddEditFragment.KEY_EDIT, contacto);
+        AddEditFragment addEditFragment = AddEditFragment.newInstance(bundle);
+        transaction.addToBackStack(null);
+        transaction.replace(R.id.flMainActivity, addEditFragment);
+        transaction.commit();
+    }
+
     public interface OnFragmentInteractionListener {
-        void addNewContacto();
+        void addNewContacto(Bundle bundle);
     }
 }

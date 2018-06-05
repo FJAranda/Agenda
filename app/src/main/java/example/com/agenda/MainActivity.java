@@ -31,14 +31,16 @@ public class MainActivity extends FragmentActivity implements RecyclerFragment.O
     }
 
     @Override
-    public void addNewContacto() {
-        addEditFragment = new AddEditFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+    public void addNewContacto(Bundle bundle) {
+        addEditFragment = (AddEditFragment)getSupportFragmentManager().findFragmentByTag(AddEditFragment.TAG);
 
-        transaction.replace(R.id.flMainActivity, addEditFragment);
-        transaction.addToBackStack(null);
-
-        transaction.commit();
+        if (addEditFragment == null) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            addEditFragment = AddEditFragment.newInstance(bundle);
+            transaction.addToBackStack(null);
+            transaction.replace(R.id.flMainActivity, addEditFragment);
+            transaction.commit();
+        }
     }
 
     @Override

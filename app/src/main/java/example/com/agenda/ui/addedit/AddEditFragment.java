@@ -5,9 +5,12 @@ import android.app.Application;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +20,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import example.com.agenda.R;
+import example.com.agenda.adapter.AgendaAdapter;
+import example.com.agenda.data.db.pojo.Contacto;
 import example.com.agenda.ui.AgendaApplication;
 
 /**
@@ -29,12 +34,16 @@ import example.com.agenda.ui.AgendaApplication;
  */
 public class AddEditFragment extends Fragment implements AddEditContract.View{
 
+    public static final String TAG = "addEditFragment";
+    public static final String KEY_EDIT = "edit";
+
     private OnFragmentInteractionListener mListener;
     private FloatingActionButton fabGuardarContacto;
     private AddEditContract.Presenter presenter;
     private TextInputLayout tilNombreContacto;
     private TextInputLayout tilTelefonoContacto;
     private TextInputLayout tilFechaNac;
+    private Boolean editar;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 
@@ -64,19 +73,47 @@ public class AddEditFragment extends Fragment implements AddEditContract.View{
         tilNombreContacto = root.findViewById(R.id.tilNombreContacto);
         tilTelefonoContacto = root.findViewById(R.id.tilTelefonoContacto);
         tilFechaNac = root.findViewById(R.id.tilFechaNac);
+        if (getArguments() == null){
+            editar = false;
+        }else{
+            editar = true;
+        }
+        return root;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         fabGuardarContacto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    presenter.addContacto(tilNombreContacto.getEditText().getText().toString(), tilTelefonoContacto.getEditText().getText().toString(),
-                            sdf.parse(tilFechaNac.getEditText().getText().toString()));
+                if (!editar) {
+                    try {
+                        presenter.addContacto(tilNombreContacto.getEditText().getText().toString(), tilTelefonoContacto.getEditText().getText().toString(),
+                                sdf.parse(tilFechaNac.getEditText().getText().toString()));
                     } catch (ParseException e) {
-                    e.printStackTrace();
+                        e.printStackTrace();
+                    }
+                }else if (editar){
+                    Contacto contacto = getArguments().getParcelable(KEY_EDIT);
+                    contacto.setNombre(tilNombreContacto.getEditText().getText().toString());
+                    contacto.setTelefono(tilTelefonoContacto.getEditText().getText().toString());
+                    try {
+                        contacto.setFecha(sdf.parse(tilFechaNac.getEditText().getText().toString()));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }presenter.editContacto(contacto);
                 }
             }
         });
 
-        return root;
+        if (editar){
+            Contacto contacto = getArguments().getParcelable(KEY_EDIT);
+
+            tilNombreContacto.getEditText().setText(contacto.getNombre());
+            tilTelefonoContacto.getEditText().setText(contacto.getTelefono());
+            tilFechaNac.getEditText().setText(sdf.format(contacto.getFecha()));
+        }
     }
 
     @Override
